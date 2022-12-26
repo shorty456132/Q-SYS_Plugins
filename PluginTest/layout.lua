@@ -6,7 +6,8 @@ if CurrentPage == "Control" then
     Fill = {200,200,200},
     StrokeWidth = 1,
     Position = {5,5},
-    Size = {200,100}
+    Size = {200,100},
+    HTextAlign = "Left"
   })
   table.insert(graphics,{
     Type = "Text",
@@ -21,7 +22,8 @@ if CurrentPage == "Control" then
     Style = "Button",
     Position = {105,42},
     Size = {50,16},
-    Color = {0,0,0}
+    Color = {0,0,0},
+    CornerRadius = 90
   }
 elseif CurrentPage == "Setup" then
   -- TBD
@@ -32,8 +34,17 @@ elseif CurrentPage == "Setup" then
     CornerRadius = 8,
     Position = {1,1},
     Color = {40,40,40},
-    Fill = {200,255,100},
+    Fill = {50,50,50,255},
     StrokeWidth = 1,
     Size = {200,300}
+  })
+  table.insert(graphics,{
+    Type = "Text",
+    Text = "Some Setup Information Goes Here",
+    Color = {150,150,150},
+    StrokeWidth = 1,
+    Position = {10,42},
+    Size = {90,auto},
+    FontSize = 14
   })
 end

@@ -6,5 +6,6 @@ table.insert(ctrls, {
   UserPin = true,
   PinStyle = "Input",
   Icon = "Power",
-  Text = "Press Me"
+  Text = "Press Me",
+  Size = {50,50}
 })
