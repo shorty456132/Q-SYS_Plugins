@@ -16,7 +16,7 @@ function GetPrettyName(props)
 end
 
 -- Optional function used if plugin has multiple pages
-PageNames = { "Control", "Setup", "OtherPage" }  --List the pages within the plugin
+PageNames = { "Control", "Serial", "OtherPage" }  --List the pages within the plugin
 function GetPages(props)
   local pages = {}
   --[[ #include "pages.lua" ]]
@@ -78,6 +78,7 @@ function GetControlLayout(props)
   --[[ #include "layout.lua" ]]
   return layout, graphics
 end
+
 
 --Start event based logic
 if Controls then
