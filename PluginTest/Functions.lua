@@ -17,7 +17,7 @@ if Controls then
   --Timers
   PollTimer = Timer.New()
 
-  --Serial Port
+  --Serial Port info
   SerialPort = SerialPorts[1]
   baud = 9600
   databits = 8
@@ -33,10 +33,28 @@ if Controls then
     Status.Value = StatusState[state] --Sets the status state
     Status.String = msg --Sets the status message
   end
+
+  function OpenSerialPort()
+    if SerialPort.IsOpen then
+      Disconnect()
+    end
+    SerialPort:Open(baud, databits, parity)
+  end
+
+  function Disconnect()
+    pollTimer.Stop()
+    SerialPort:Close()
+  end
+
+  --Operations that will be performed when the serial port connects
+  function Connected()
+    ReportStatus("OK" .. EOL)
+    pollTimer:Start(PollTime)
+  end
   
   function Send(cmd)
     if SerialPort.IsOpen then
-      SerialPort:Write(cmd ... EOL)
+      SerialPort:Write(cmd)
     end
   end
 

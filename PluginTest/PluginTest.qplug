@@ -6,7 +6,7 @@
 PluginInfo = {
   Name = "Base Plugin",
   Version = "0.0",
-  BuildVersion = "0.0.0.62",
+  BuildVersion = "0.0.0.68",
   Id = "597d6068-42e7-4dd2-af10-6f4ebc61ce13",
   Author = "Your_Company",
   Description = "A very basic plugin"  
@@ -234,7 +234,7 @@ function GetControlLayout(props)
     layout["Password"] = {
       PrettyName = "Password",
       Style = "Text",
-      Position = {100,5},
+      Position = {305,5},
       Size = {100,16}
     }
     -- Data and Response Controls
@@ -268,7 +268,9 @@ if Controls then
   end
   PollTimer.EventHandler = PollDevice
   SendBtn.EventHandler = function()
-    if SendBtn.Value = 1 then  
+    if SendBtn.Value == 1 then  
+      Send("Hello World")
+    end
   end
   
 end

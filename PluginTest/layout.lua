@@ -58,7 +58,7 @@ elseif CurrentPage == "Serial" then
   layout["Password"] = {
     PrettyName = "Password",
     Style = "Text",
-    Position = {100,5},
+    Position = {305,5},
     Size = {100,16}
   }
   -- Data and Response Controls
