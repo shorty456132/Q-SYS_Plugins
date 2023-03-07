@@ -1,0 +1,671 @@
+-- Basic Framework Plugin
+-- by QSC
+-- October 2020
+
+-- Information block for the plugin
+PluginInfo = {
+  Name = "Mulit-Display-Control-Plugin",
+  Version = "0.0",
+  BuildVersion = "0.0.0.206",
+  Id = "a5af584b-371a-476f-9f66-61b8c3fba4c4",
+  Author = "DGI Tech",
+  Description = "Used to select different display make/model and have commands sent based on the display selection"  
+}
+
+
+-- resources
+
+--Colour palette
+Palette = {
+	DT_blue   = {25, 51, 107},
+	DT_Yellow = {234, 187, 0},
+	White     = {255, 255, 255},
+	Black     = {0, 0, 0},
+	Red       = {255, 0, 0},
+	Green     = {0, 255, 0}
+}
+
+
+-- Logo --------------------
+DGI_Logo = "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"
+
+-- Define the color of the plugin object in the design
+function GetColor(props)
+  return { 102, 102, 102 }
+end
+
+-- The name that will initially display when dragged into a design
+function GetPrettyName(props)
+  return "Mulitple-Display Control, v-" .. PluginInfo.Version
+end
+
+-- Optional function used if plugin has multiple pages
+PageNames = { "Controls", "Settings"}  --List the pages within the plugin
+function GetPages(props)
+  local pages = {}
+  for ix,name in ipairs(PageNames) do
+    table.insert(pages, {name = PageNames[ix]})
+  end
+  return pages
+end
+
+-- Optional function to define model if plugin supports more than one model
+function GetModel(props)
+  local model = {}
+  if props.Model ~= nil and props.Model.Value ~= "" then
+    table.insert(model, { props.Model.Value } )
+  else
+    table.insert(model, { "Base Model" } )
+  end
+ return model
+end
+
+-- Define User configurable Properties of the plugin
+function GetProperties()
+  local props = {}
+  table.insert(props, {
+    Name = "Debug Print",
+    Type = "enum",
+    Choices = {"None", "Tx/Rx", "Tx", "Rx", "Function Calls", "All"},
+    Value = "None"
+  })
+  table.insert(props, {
+    Name = "Control_Type",
+    Type = "enum",
+    Choices = {"RS-232", "TCP/IP", "CEC"},
+    Value = "RS-232"
+  })
+  table.insert(props, {
+    Name = "Display_Make",
+    Type = "enum",
+    Choices = {"Sharp","Samsung","Sony","Panasonic"}
+  })
+  
+  
+  return props
+end
+
+-- Optional function to define pins on the plugin that are not connected to a Control
+function GetPins(props)
+  local pins = {}
+  table.insert(pins,{
+    Name = "Audio Output",
+    Direction = "output",
+  })
+  return pins
+end
+
+-- Optional function to update available properties when properties are altered by the user
+function RectifyProperties(props)
+  if props.plugin_show_debug.Value == false then 
+    props["Debug Print"].IsHidden = true 
+  end
+  
+  -- if props["Control_Type"].Value == "RS-232" then 
+  --   props["Baudrate"].
+  -- end
+  return props
+end
+
+-- Optional function to define components used within the plugin
+function GetComponents(props)
+  local components = {}
+  table.insert(components,{
+    Name = "main_mixer",
+    Type = "mixer",
+    Properties =   
+    {
+      ["n_inputs"] = 8,
+      ["n_outputs"] = 1,
+    }
+  })
+  return components
+end
+
+-- Optional function to define wiring of components used within the plugin
+function GetWiring(props)
+  local wiring = {}
+  table.insert( wiring, { "Audio Output", "main_mixer Output 1" } )
+  return wiring
+end
+
+-- Defines the Controls used within the plugin
+function GetControls(props)
+  local ctrls = {}
+  -- Connection Setup -------------------------------------
+  table.insert(ctrls, {
+    Name = "RS232",
+    ControlType = "Button",
+    ButtonType = "Momentary",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Input"
+  })
+  table.insert(ctrls, {
+    Name = "TCP_Conn",
+    ControlType = "Button",
+    ButtonType = "Momentary",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Input"
+  })
+  
+  -- RS232 Settings ----
+  table.insert(ctrls, {
+    Name = "BaudRate",
+    ControlType = "Text",
+    DefaultValue = "9600",
+    UserPin = true,
+    PinStyle = "Input",
+    Count = 1
+  })
+  table.insert(ctrls, {
+    Name = "DataBits",
+    ControlType = "Text",
+    DefaultValue = "8",
+    UserPin = true,
+    PinStyle = "Input",
+    Count = 1
+  })
+  table.insert(ctrls, {
+    Name = "StopBits",
+    ControlType = "Text",
+    UserPin = true,
+    PinStyle = "Input"
+  })
+  table.insert(ctrls, {
+    Name = "Parity",
+    ControlType = "Text",
+    -- ControlType = "enum",
+    -- Choices = {"None","Even", "Odd"},
+    DefaultValue = "None",
+    UserPin = true,
+    PinStyle = "Input"
+  })
+  
+  -- TCP/IP Settings ------
+  table.insert(ctrls, {
+    Name = "IPAddress",
+    ControlType = "Text",
+    DefaultValue = "127.0.0.1"
+  })
+  table.insert(ctrls, {
+    Name = "Port",
+    ControlType = "Text",
+    DefaultValue = "50000",
+  })
+  table.insert(ctrls, {
+    Name = "Authentication",
+    ControlType = "Button",
+    ButtonType = "Toggle",
+    Count = 1
+  })
+  table.insert(ctrls, {
+    Name = "UserName",
+    ControlType = "Text",
+    DefaultValue = "admin"
+  })
+  table.insert(ctrls, {
+    Name = "Password",
+    ControlType = "Text",
+    DefaultValue = "admin"
+  })
+  
+  -- Display Controls -------------------------------------
+  table.insert(ctrls, {
+    Name = "PowerOn",
+    ControlType = "Button",
+    ButtonType = "Momentary",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Input",
+    Icon = "Power"
+  })
+  table.insert(ctrls, {
+    Name = "PowerOff",
+    ControlType = "Button",
+    ButtonType = "Momentary",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Input",
+    Icon = "Power"
+  })
+  table.insert(ctrls, {
+    Name = "Volume",
+    ControlType = "Button",
+    ButtonType = "Momentary",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Input",
+    Icon = ""
+  })
+  table.insert(ctrls, {
+    Name = "HMDI1",
+    ControlType = "Button",
+    ButtonType = "Momentary",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Input",
+    Icon = ""
+  })
+  table.insert(ctrls, {
+    Name = "HMDI2",
+    ControlType = "Button",
+    ButtonType = "Momentary",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Input",
+    Icon = ""
+  })
+  table.insert(ctrls, {
+    Name = "HMDI3",
+    ControlType = "Button",
+    ButtonType = "Momentary",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Input",
+    Icon = ""
+  })
+  
+  
+  return ctrls
+end
+
+--Layout of controls and graphics for the plugin UI to display
+function GetControlLayout(props)
+  local layout = {}
+  local graphics = {}
+  local CurrentPage = PageNames[props["page_index"].Value]
+  
+  local h1 = 20                 --Height of text elements
+  local h2 = 32                 --Height of control buttons
+  local GroupBoxHeight = 155    --Height od group boxes
+  local w1 = 280                --Width of group boxes
+  local fs1 = 12                --FontSize of text elements
+  local _keySize = {80, 25}     --Size of the description keys in Key/Value pair
+  
+  
+  
+  if CurrentPage == "Settings" then
+  -- Logo ---------------------------------------------------
+    table.insert(graphics,{
+      Type = "Text",
+      Text = "Build Info",
+      FontSize = fs1,
+      HTextAlign = "Left",
+      Position =  {0,0},
+      Size = {62,h1}
+    })
+    table.insert(graphics,{
+      Type = "Text",
+      Text = "v" .. PluginInfo.BuildVersion,
+      FontSize = fs1,
+      HTextAlign = "Left",
+      Position = {0, h1},
+      Size = {62, h1}
+     })
+     table.insert(graphics,{
+      Type = "Image",
+      Image = DGI_Logo,
+      Position = {112,0},
+      Size = {168, 35}
+     })
+  
+  
+     -- GroupBoxes ----------------------------------------------
+     table.insert(graphics,{
+      Type = "GroupBox",
+      Text = "Connection",
+      FontSize = fs1,
+      HTextAlign = "Left",
+      Fill = Palette.DT_blue,
+      StrokeColor = Palette.DT_Yellow,
+      StrokeWidth = 1,
+      CornerRadius = 8,
+      Position = {0, 50},
+      Size = {w1, GroupBoxHeight}
+    })
+  
+    table.insert(graphics,{
+      Type = "GroupBox",
+      Text = "Display Info",
+      FontSize = fs1,
+      HTextAlign = "Left",
+      Fill = Palette.DT_blue,
+      StrokeColor = Palette.DT_Yellow,
+      StrokeWidth = 1,
+      CornerRadius = 8,
+      Position = {0, GroupBoxHeight + 55},
+      Size = {w1, GroupBoxHeight }
+    })
+  
+  -- Control Setup  ---------------------------------------------------------------------------------
+  --RS232 Layout ---------------------------------------
+   if props["Control_Type"].Value == "RS-232" then  
+    table.insert(graphics, {
+      Type = "Text",
+      Text = "RS-232 Settings",
+      Position = {90, 52},
+      Size = {150,30},
+      VTextAlign = "Top",
+      Color = {255,255,255},
+      FontSize = h1
+    })
+    table.insert(graphics, {
+      Type       = "Text",
+      Text       = "Baud Rate:",
+      Position   = {10, 80},
+      Size       = _keySize,
+      Color      = {255, 255, 255},
+      FontSize   = fs1,
+      HTextAlign = "Left"
+    })
+    layout["BaudRate"] = {
+      PrettyName = "_BaudRate",
+      Style = "ComboBox",
+      Position = {90, 80},
+      Size = {90, 25}
+    }
+    table.insert(graphics, {
+      Type       = "Text",
+      Text       = "Data Bits:",
+      Position   = {10, 110},
+      Size       = _keySize,
+      Color      = {255, 255, 255},
+      FontSize   = fs1,
+      HTextAlign = "Left"
+    })
+    layout["DataBits"] = {
+      PrettyName = "_DataBits",
+      Style = "ComboBox",
+      Position = {90, 110},
+      Size = {50, 25}
+    }
+    table.insert(graphics, {
+      Type       = "Text",
+      Text       = "Stop Bits:",
+      Position   = {10, 140},
+      Size       = _keySize,
+      Color      = {255, 255, 255},
+      FontSize   = fs1,
+      HTextAlign = "Left"
+    })
+    layout["StopBits"] = {
+      PrettyName = "_StopBits",
+      Style = "ComboBox",
+      Position = {90, 140},
+      Size = {50, 25}
+    }
+    table.insert(graphics, {
+      Type       = "Text",
+      Text       = "Parity:",
+      Position   = {10, 170},
+      Size       = _keySize,
+      Color      = {255, 255, 255},
+      FontSize   = fs1,
+      HTextAlign = "Left"
+    })
+    layout["Parity"] = {
+      PrettyName = "_Parity",
+      Style = "ComboBox",
+      Position = {90, 170},
+      Size = {70, 25},
+      Fill = Palette.White
+    }
+  
+  --TCP/IP Layout ---------------------------------------
+    elseif props["Control_Type"].Value == "TCP/IP" then
+      table.insert(graphics, {
+        Type = "Text",
+        Text = "TCP/IP Settings",
+        Position = {90, 52},
+        Size = {150,30},
+        VTextAlign = "Top",
+        Color = {255,255,255},
+        FontSize = h1
+      })
+      table.insert(graphics, {
+        Type       = "Text",
+        Text       = "IP Address:",
+        Position   = {10, 80},
+        Size       = _keySize,
+        Color      = {255, 255, 255},
+        FontSize   = fs1,
+        HTextAlign = "Left"
+      })
+      layout["IPAddress"] = {
+        PrettyName = "_IPAddr",
+        Style = "Text",
+        Position = {80, 80},
+        Size = {90, 25},
+        Fill = Palette.White
+      }
+      table.insert(graphics, {
+        Type       = "Text",
+        Text       = "Port:",
+        Position   = {10, 110},
+        Size       = _keySize,
+        Color      = {255, 255, 255},
+        FontSize   = fs1,
+        HTextAlign = "Left"
+      })
+      layout["Port"] = {
+        PrettyName = "_Port",
+        Style = "Text",
+        Position = {80, 110},
+        Size = {60, 25}
+      }
+      table.insert(graphics, {
+        Type = "Text",
+        Text = "Authentication:",
+        Position = {150, 110},
+        Size = {88, 25},
+        Color = {255,255,255},
+        FontSize = fs1,
+        HTextAlign = "Left"
+      })
+      layout["Authentication"] = {
+        PrettyName = "Auth",
+        Style = "Button",
+        Position = {240, 110},
+        Size = {25, 25}
+      }
+  
+      table.insert(graphics, {
+        Type = "Text",
+        Text = "Username:",
+        Position = {10, 140},
+        Size = {80, 25},
+  
+      })
+      layout["UserName"] = {
+        PrettyName = "User",
+        Style = "Text",
+        Position = {80, 140},
+        Size = {80, 25}
+      }
+      layout["Password"] = {
+        PrettyName = "Password",
+        Style = "Text",
+        Position = {80, 170},
+        Size = {80, 25}
+      }
+      table.insert(graphics, {
+        Type = "Text",
+        Text = "Password:",
+        Position = {10, 140},
+        Size = {80, 25}
+      })
+    end
+  
+  
+    -- Display Setup ------------------------------------------------
+    table.insert(graphics, {
+      Type       = "Text",
+      Text       = "Display Make:",
+      Position   = {10, GroupBoxHeight + 70},
+      Size       = _keySize,
+      Color      = {255, 255, 255},
+      FontSize   = fs1,
+      HTextAlign = "Left"
+    })
+    layout["DisplayMake"] = {
+      PrettyName = "_DisplayMake",
+      Style = "ComboBox",
+      Position = {90, GroupBoxHeight + 70},
+      Size = {90, 25}
+    }
+  
+  
+  
+  elseif CurrentPage == "Controls" then
+    -- Logo ---------------------------------------------------
+    table.insert(graphics,{
+      Type = "Text",
+      Text = "Build Info",
+      FontSize = fs1,
+      HTextAlign = "Left",
+      Position =  {0,0},
+      Size = {62,h1}
+    })
+    table.insert(graphics,{
+      Type = "Text",
+      Text = "v" .. PluginInfo.BuildVersion,
+      FontSize = fs1,
+      HTextAlign = "Left",
+      Position = {0, h1},
+      Size = {62, h1}
+     })
+     table.insert(graphics,{
+      Type = "Image",
+      Image = DGI_Logo,
+      Position = {112,0},
+      Size = {168, 35}
+     })
+  
+     -- GroupBoxes ----------------------------------------------
+     table.insert(graphics,{
+      Type = "GroupBox",
+      Text = "Display Controls",
+      FontSize = fs1,
+      HTextAlign = "Left",
+      Fill = Palette.DT_blue,
+      StrokeColor = Palette.DT_Yellow,
+      StrokeWidth = 1,
+      CornerRadius = 8,
+      Position = {0, 50},
+      Size = {w1, GroupBoxHeight}
+    })
+  
+  
+     -- Display Control  -----------------------------------------------------------
+    layout["PowerOn"] = {
+      PrettyName = "PowerOn",
+      Style = "Button",
+      Legend = "Power On",
+      Position = {110,55},
+      Size = {75, 30},
+      OffColor = Palette.Green
+    }
+    layout["PowerOff"] = {
+      PrettyName = "PowerOff",
+      Style = "Button",
+      Legend = "Power Off",
+      Position = {190,55},
+      Size = {75, 30},
+      OffColor = Palette.Green
+    }
+  end
+  
+  
+  
+  
+  
+  
+  
+  
+  --*********** Base Code ***************--
+  -- if CurrentPage == "Control" then
+  --   table.insert(graphics,{
+  --     Type = "GroupBox",
+  --     Text = "Control",
+  --     Fill = {200,200,200},
+  --     StrokeWidth = 1,
+  --     Position = {5,5},
+  --     Size = {200,100}
+  --   })
+  --   table.insert(graphics,{
+  --     Type = "Text",
+  --     Text = "Say Hello:",
+  --     Position = {10,42},
+  --     Size = {90,16},
+  --     FontSize = 14,
+  --     HTextAlign = "Right"
+  --   })
+  --   layout["SendButton"] = {
+  --     PrettyName = "Buttons~Send The Command",
+  --     Style = "Button",
+  --     Position = {105,42},
+  --     Size = {50,16},
+  --     Color = {0,0,0}
+  --   }
+  -- elseif CurrentPage == "Setup" then
+  --   -- TBD
+  -- end
+  return layout, graphics
+end
+
+--Start event based logic
+if Controls then
+  -- Controls.SendButton.EventHandler = function()
+  --   print("Hello, World!")
+  -- end
+  
+  -- dofile should import lua scripts. I could not get this to work in emulation mode
+  -- the dofile function expects a file path as its argument, 
+  -- so the external script file must be located in a directory accessible by the Q-SYS processor. 
+  -- You can use a relative or absolute file path depending on the location of the external script file.
+  -- example
+  -- dofile("myScript.lua")
+  -- Controls.PowerOn.EventHandler = myFunction()
+  
+  
+  RS232_ConnTypes = Controls["BaudRate"]
+  RS232_BaudRates = {"9600", "42800", "115200"}
+  RS232_DataBits = {"7", "8"}
+  RS232_StopBits = {"1", "2"}
+  RS232_Parity   = {"None","Even","Odd"}
+  
+  
+  RS232_ConnTypes.Choices = RS232_BaudRates
+  Controls["DataBits"].Choices = RS232_DataBits
+  Controls["StopBits"].Choices = RS232_StopBits
+  Controls["Parity"].Choices   = RS232_Parity
+  
+  
+  -- EventHandlers --------------------------------------------------------------------------------------
+  
+  
+  Controls.Authentication.EventHandler = function (e)
+    for i,v in pairs (table) do
+      print(i..", "..v)
+    end
+  
+    if e.Boolean == true then
+      Controls['UserName'].IsInvisible = false
+      Controls['Password'].IsInvisible = false
+    else
+      Controls['UserName'].IsInvisible = true
+      Controls['Password'].IsInvisible = true
+    end
+  
+  end
+  
+  
+  -- RS232 Control --------------------------------------------------------------------------------------
+  if Properties["Control_Type"].Value == "RS-232" then
+    
+  elseif Properties["Control_Type"].Value == "TCP/IP" then
+    print("Control Type is TCP/IP")
+  end
+end

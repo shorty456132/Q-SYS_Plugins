@@ -1,0 +1,447 @@
+-- Basic Framework Plugin
+-- by QSC
+-- October 2020
+
+-- Information block for the plugin
+PluginInfo = {
+  Name = "Serial Interface",
+  Version = "0.0",
+  BuildVersion = "1.0.0.0",
+  Id = "bd8e7124-7c6c-463c-a335-d240d52cd2be",
+  Author = "Andrew Laiacano",
+  Description = "A very basic Serial connection plugin"  
+}
+
+-- Define the color of the plugin object in the design
+function GetColor(props)
+  return { 102, 102, 102 }
+end
+
+-- The name that will initially display when dragged into a design
+function GetPrettyName(props)
+  return "Serial Display Interface, version " .. PluginInfo.Version
+end
+
+-- Optional function used if plugin has multiple pages
+-- PageNames = { "Control", "Setup" }  --List the pages within the plugin
+-- function GetPages(props)
+--   local pages = {}
+--   --[[ #include "pages.lua" ]]
+--   return pages
+-- end
+
+-- Optional function to define model if plugin supports more than one model
+function GetModel(props)
+  local model = {}
+  if props.Model ~= nil and props.Model.Value ~= "" then
+    table.insert(model, { props.Model.Value } )
+  else
+    table.insert(model, { "Base Model" } )
+  end
+ return model
+end
+
+-- Define User configurable Properties of the plugin
+function GetProperties()
+  local props = {}
+  table.insert(props, {
+    Name = "Debug Print",
+    Type = "enum",
+    Choices = {"None", "Tx/Rx", "Tx", "Rx", "Function Calls", "All"},
+    Value = "None"
+  })
+  
+  -- Choose a display type. 
+  -- this will build out power on/off controls and associate Fb strings based on model
+  table.insert(props, {
+    Name = "DisplayMake",
+    Type = "enum",
+    Choices ={"Sony", "Samsung-UDC"},
+    Value = "Sony"  
+  })
+  return props
+end
+
+-- Optional function to define pins on the plugin that are not connected to a Control
+function GetPins(props)
+  local pins = {}
+  table.insert(pins,{
+    Name = "Serial Input",
+    Direction = "input",
+    Domain = "serial"
+  })
+  return pins
+end
+
+-- Optional function to update available properties when properties are altered by the user
+function RectifyProperties(props)
+  if props.plugin_show_debug.Value == false then 
+    props["Debug Print"].IsHidden = true 
+  end
+  return props
+end
+
+-- Optional function to define components used within the plugin
+function GetComponents(props)
+  local components = {}
+  table.insert(components,{
+    Name = "main_mixer",
+    Type = "mixer",
+    Properties =   
+    {
+      ["n_inputs"] = 8,
+      ["n_outputs"] = 1,
+    }
+  })
+  return components
+end
+
+-- Optional function to define wiring of components used within the plugin
+function GetWiring(props)
+  local wiring = {}
+  -- table.insert( wiring, { "Audio Output", "main_mixer Output 1" } )
+  return wiring
+end
+
+-- Defines the Controls used within the plugin
+function GetControls(props)
+  local ctrls = {}
+  -- table.insert(ctrls, {
+  --   Name = "SendButton",
+  --   ControlType = "Button",
+  --   ButtonType = "Momentary",
+  --   Count = 1,
+  --   UserPin = true,
+  --   PinStyle = "Input",
+  --   Icon = "Power"
+  -- })
+  
+  table.insert(ctrls, {
+    Name = "Baud",
+    ControlType = "Text",
+    Count = 1,
+    DefaultValue = "9600"
+  })
+  table.insert(ctrls, {
+    Name = "DataBits",
+    ControlType = "Text",
+    Count = 1,
+    DefaultValue = "8"
+  })
+  table.insert(ctrls, {
+    Name = "Parity", 
+    ControlType = "Text",
+    Count = 1,
+    DefaultValue = "N"  
+  })
+  
+  -- Power Commands ----------------------------------------
+  table.insert(ctrls, {
+    Name = "PowerOn",
+    ControlType = "Button",
+    ButtonType = "Momentary",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Input"
+  })
+  table.insert(ctrls, {
+    Name = "PowerOff",
+    ControlType = "Button",
+    ButtonProperty = "Momentary",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Input"
+  })
+  
+  table.insert(ctrls, {
+    Name = "PowerToggle",
+    ControlType = "Button",
+    ButtonType = "Toggle",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Input"
+  })
+  
+  table.insert(ctrls, {
+    Name = "PowerOnFb",
+    ControlType = "Button",
+    ButtonType = "Toggle",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Output"
+  })
+  table.insert(ctrls, {
+    Name = "PowerOffFb",
+    ControlType = "Button",
+    ButtonType = "Toggle",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Output"
+  })
+  table.insert(ctrls, {
+    Name = "DataReceived",
+    ControlType = "Text",
+    Count = 1
+  })
+  return ctrls
+end
+
+--Layout of controls and graphics for the plugin UI to display
+function GetControlLayout(props)
+  local layout = {}
+  local graphics = {}
+  
+  
+  -- GroupBoxes ----------------------------------------------
+  table.insert(graphics,{
+    Type = "GroupBox",
+    Text = "Connection",
+    FontSize = fs1,
+    HTextAlign = "Left",
+    StrokeWidth = 1,
+    CornerRadius = 8,
+    Position = {0, 50},
+    Size = {280, 300} --[[ Make this a variable ]]
+  })
+  
+  -- Baud Rate 
+  table.insert(graphics, {
+    Type = "Text",
+    Text = "Baud Rate",
+    Position = {10, 70},
+    Size = {60, 25}
+  })
+  layout["Baud"] = {
+    PrettyName = "BaudRate",
+    Style = "ComboBox",
+    Position = {70, 70},
+    Size = {60, 25} --[[ Make this a variable ]]
+  }
+  
+  -- DataBits
+  table.insert(graphics, {
+    Type = "Text",
+    Text = "Data Bits",
+    Position = {10, 100},
+    Size = {60, 25}
+  })
+  layout["DataBits"] = {
+    PrettyName = "DataBits",
+    Style = "ComboBox",
+    Position = {70, 100},
+    Size = {60, 25}
+  }
+  
+  -- Parity
+  table.insert(graphics, {
+    Type = "Text",
+    Text = "Parity",
+    Position = {10, 130},
+    Size = {60, 25}
+  })
+  layout["Parity"] = {
+    PrettyName = "Parity",
+    Style = "ComboBox",
+    Position = {70, 130},
+    Size = {60, 25}
+  }
+  
+  -- -- Display Model
+  -- table.insert(graphics, {
+  --   Type = "Text",
+  --   Text = "Display",
+  --   Position = {10, 160},
+  --   Size = {60, 25}
+  -- })
+  -- layout["DisplayMake"] = {
+  --   PrettyName = "DisplayMake",
+  --   Style = "ComboBox",
+  --   Position = {70, 160},
+  --   Size = {60, 25}
+  -- }
+  
+  -- Display Controls ---------------------------------------------
+  
+  -- Power On
+  table.insert(graphics, {
+  Type = "Button",
+  Text = "Power On",
+  Position = {10, 200},
+  Size = {60, 25}
+  })
+  layout["PowerOn"] = {
+  PrettyName = "PowerOn",
+  Style = "Button",
+  Position = {70, 200},
+  Size = {60, 25}
+  }
+  
+  -- Power Off
+  table.insert(graphics, {
+    Type = "Text",
+    Text = "Power Off",
+    Position = {10, 230},
+    Size = {60, 25}
+    })
+    layout["PowerOff"] = {
+    PrettyName = "PowerOff",
+    Style = "Button",
+    Position = {70, 230},
+    Size = {60, 25}
+    }
+  
+    -- Power Toggle
+  table.insert(graphics, {
+    Type = "Text",
+    Text = "Power Toggle",
+    Position = {10, 260},
+    Size = {60, 25}
+  })
+  layout["PowerToggle"] = {
+    PrettyName = "Power Toggle",
+    Style = "Button",
+    Position = {70, 260},
+    Size = {60, 25}
+  }
+  return layout, graphics
+end
+
+--Start event based logic
+if Controls then
+  -- Aliases --------
+  RS232_Baud = {"9600", "38400", "115200"}
+  RS232_Parity = {"N","E","O"}
+  RS232_DataBits = {"8", "7"}
+  
+  Controls["Baud"].Choices = RS232_Baud
+  Controls["Parity"].Choices = RS232_Parity
+  Controls["DataBits"].Choices = RS232_DataBits
+  
+  Baud = ""
+  DataBits = ""
+  Parity = ""
+  DataReceived = Controls.DataReceived
+  
+  -- Constants -----------------------------
+  Sony_PowerOn = "\x8C\x00\x00\x02\x01\x8F"
+  Sony_PowerOff = "\x8C\x00\x00\x02\x00\x8E"
+  Samsung_PowerOn = "\xAA\x11\xFE\x01\x01\x11"
+  Samsung_PowerOff = "\xAA\x11\xFE\x01\x00\x10"
+  
+  -- variables -----------------------------
+  DisplayType = ""
+  
+  
+  -- Serial Port Setup ---------------------
+  SerialPort = SerialPorts[1]
+  buffer = ""
+  
+  -- Functions ------------------------------
+  function OpenSerialPort()
+    --If already open, close and reopen
+    if SerialPort.IsOpen then
+      print("Serial Port is already open. Closing, then reopening")
+      Disconnect()
+    end
+    GetDisplayType()
+  end
+  
+  
+  function Disconnect()
+    SerialPort:Close()
+  end
+  
+  function SendCommand(msg)
+    print("sending: " .. msg)
+  
+    if SerialPort.IsOpen then
+      SerialPort:Write(msg)
+    end
+  end
+  
+  function GetDisplayType()
+    if Properties["DisplayMake"].Value == "Sony" then
+      DisplayType = "Sony"
+    elseif Properties["DisplayMake"].Value == "Samsung-UDC" then
+      DisplayType = "Samsung"
+    end
+  end
+  
+  function CheckConnectionSettings()
+    if (Baud == nil) and (DataBits == nil) and (Parity == nil) then
+      print("Settings not ready...")
+      return
+    end
+    print("Settings entered successfully...\n Opening Serial Port...\n")
+    OpenSerialPort()
+  end
+  
+  -- TODO: Implement ParseResponse() data based on DisplayType. trigger Fb to output pins
+  function ParseResponse()
+    -- local rx = SerialPort:ReadLine(SerialPort.BufferLength)
+    -- buffer = buffer .. rx
+  
+    -- -- Send Fb depending on the display make
+    -- if DisplayType == "Sony" then
+    --   if string.Find(buffer,"\x83\x00\x00") 
+    -- elseif DisplayType == "Samsung" then
+  
+    -- end
+  end
+  
+  -- EventHandlers ------------------------
+  
+  Controls.Baud.EventHandler = function(e)
+    Baud = tonumber(e.String)
+    CheckConnectionSettings()
+  end
+  Controls.DataBits.EventHandler = function(e)
+    DataBits = tonumber(e.String)
+    CheckConnectionSettings()
+  end
+  Controls.Parity.EventHandler = function(e)
+    Parity = e.String
+    CheckConnectionSettings()
+  end
+  
+  Controls.PowerOn.EventHandler = function()
+    Controls.PowerToggle.Value = 1
+    if DisplayType == "Sony" then
+      SendCommand(Sony_PowerOn)
+    elseif DisplayType == "Samsung" then
+      SendCommand(Samsung_PowerOn)
+    end
+  end
+  Controls.PowerOff.EventHandler = function()
+    Controls.PowerToggle.Value = 0
+    if DisplayType == "Sony" then
+      SendCommand(Sony_PowerOff)
+    elseif DisplayType == "Samsung" then
+      SendCommand(Samsung_PowerOff)
+    end
+  end
+  
+  Controls.PowerToggle.EventHandler = function(e)
+    print(e.Value)
+    if e.Value == 1 then 
+      if DisplayType == "Sony" then
+        SendCommand(Sony_PowerOn)
+      elseif DisplayType == "Samsung" then
+        SendCommand(Samsung_PowerOn)
+      end
+    elseif e.Value == 0 then 
+      if DisplayType == "Sony" then
+        SendCommand(Sony_PowerOff)
+      elseif DisplayType == "Samsung" then
+        SendCommand(Samsung_PowerOff)
+      end
+    end
+  end
+  
+  
+  
+  SerialPort.Data = ParseResponse       -- Calls ParseResponse() when the serial port recieves data
+  
+  -- Run At Start --------------------------
+  CheckConnectionSettings()
+end

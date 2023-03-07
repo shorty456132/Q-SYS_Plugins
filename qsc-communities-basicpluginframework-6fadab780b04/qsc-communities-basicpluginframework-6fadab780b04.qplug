@@ -6,8 +6,8 @@
 PluginInfo = {
   Name = "Base Plugin",
   Version = "0.0",
-  BuildVersion = "0.0.0.68",
-  Id = "597d6068-42e7-4dd2-af10-6f4ebc61ce13",
+  BuildVersion = "0.0.0.1",
+  Id = "bd8e7124-7c6c-463c-a335-d240d52cd2be",
   Author = "Your_Company",
   Description = "A very basic plugin"  
 }
@@ -23,7 +23,7 @@ function GetPrettyName(props)
 end
 
 -- Optional function used if plugin has multiple pages
-PageNames = { "Control", "Serial", "OtherPage" }  --List the pages within the plugin
+PageNames = { "Control", "Setup" }  --List the pages within the plugin
 function GetPages(props)
   local pages = {}
   for ix,name in ipairs(PageNames) do
@@ -60,17 +60,7 @@ function GetPins(props)
   local pins = {}
   table.insert(pins,{
     Name = "Audio Output",
-    Direction = "output"
-  })
-  table.insert(pins,{
-    Name = "Serial Output",
     Direction = "output",
-    Domain = "serial"
-  })
-  table.insert(pins,{
-    Name = "Serial Input",
-    Direction = "input",
-    Domain = "serial"
   })
   return pins
 end
@@ -115,57 +105,7 @@ function GetControls(props)
     Count = 1,
     UserPin = true,
     PinStyle = "Input",
-    Icon = "Power",
-    Text = "Press Me",
-    Size = {50,50}
-  })
-  table.insert(ctrls, {
-    Name = "SerialSend",
-    ControlType = "Text",
-    ButtonType = "Momentary",
-    Count = 1,
-    UserPin = true,
-    PinStyle = "Input"
-  })
-  
-  --****** Serial Ctrls ************
-  
-  table.insert(ctrls, {
-    Name = "Status",
-    ControlType = "Indicator",
-    IndicatorType =  "Status",
-    PinStyle = "Output",
-    UserPin = true,
-    Count = 1
-  })
-  table.insert(ctrls, {
-    Name = "Username",
-    ControlType = "Text",
-    UeserPin = true,
-    PinStyle = "Both",
-    Count = 1
-  })
-  table.insert(ctrls, {
-    Name = "Password",
-    ControlType = "Text",
-    UeserPin = true,
-    PinStyle = "Both",
-    Count = 1
-  })
-  table.insert(ctrls, {
-    Name = "SendBtn",
-    ControlType = "Button",
-    ButtonType = "Momentary",
-    Count = 1,
-    UserPin = true,
-    PinStyle = "Input"
-  })
-  table.insert(ctrls, {
-    Name = "ResponseText",
-    ControlType = "Text",
-    Count = 1,
-    UserPin = true,
-    PinStyle = "Output"
+    Icon = "Power"
   })
   return ctrls
 end
@@ -175,8 +115,6 @@ function GetControlLayout(props)
   local layout = {}
   local graphics = {}
   local CurrentPage = PageNames[props["page_index"].Value]
-  
-  --********** Control Page *************
   if CurrentPage == "Control" then
     table.insert(graphics,{
       Type = "GroupBox",
@@ -184,8 +122,7 @@ function GetControlLayout(props)
       Fill = {200,200,200},
       StrokeWidth = 1,
       Position = {5,5},
-      Size = {300,200},
-      HTextAlign = "Left"
+      Size = {200,100}
     })
     table.insert(graphics,{
       Type = "Text",
@@ -196,80 +133,21 @@ function GetControlLayout(props)
       HTextAlign = "Right"
     })
     layout["SendButton"] = {
-      PrettyName = "Send The Command",
+      PrettyName = "Buttons~Send The Command",
       Style = "Button",
       Position = {105,42},
-      Size = {50,50},
-      Color = {0,0,0},
-      CornerRadius = 90
+      Size = {50,16},
+      Color = {0,0,0}
     }
-    
-  
-  -- ************ Serial Page **************
-  elseif CurrentPage == "Serial" then
-    table.insert(graphics,{
-      Type = "Text",
-      Text = "User Name: ",
-      HTextAlign = "Right",
-      CornerRadius = 8,
-      Position = {5,5},
-      Color = {40,40,40},
-      Size = {95,16},
-      FontSize = 14
-    })
-    table.insert(graphics,{
-      Type = "Text",
-      Text = "Password: ",
-      HTextAlign = "Right",
-      Position = {205,5},
-      Size = {95,16},
-      FontSize = 14
-    })
-    layout["Username"] = {
-      PrettyName = "Username",
-      Style = "Text",
-      Position = {100,5},
-      Size = {100,16}
-    }
-    layout["Password"] = {
-      PrettyName = "Password",
-      Style = "Text",
-      Position = {305,5},
-      Size = {100,16}
-    }
-    -- Data and Response Controls
-    layout["Status"] = {
-      PrettyName = "Connection Status",
-      Position = {115,30},
-      Size = {180,20}
-    }
-    layout["SendBtn"] = {
-      PrettyName = "Send Request",
-      Legend = "Send",
-      FontSize = 12,
-      Style = "Button",
-      Position = {150, 80},
-      Size = {360,20}
-    }
-    layout["ResponseText"] = {
-      PrettyName = "Data",
-      Position = {15,105},
-      Size = {360,20}
-    }
+  elseif CurrentPage == "Setup" then
+    -- TBD
   end
   return layout, graphics
 end
-
 
 --Start event based logic
 if Controls then
   Controls.SendButton.EventHandler = function()
     print("Hello, World!")
   end
-  --PollTimer.EventHandler = PollDevice
-  --SendBtn.EventHandler = function()
-    --if SendBtn.Value == 1 then  
-      --Send("Hello World")
-    --end
-  --end
 end

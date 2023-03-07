@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="199.955" height="25.12" viewBox="0 0 1592 200">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #e7e7e8;
+      }
+
+      .cls-1, .cls-2 {
+        stroke: #000;
+        stroke-width: 1px;
+        fill-rule: evenodd;
+      }
+
+      .cls-2 {
+        fill: #a7a9ac;
+      }
+    </style>
+    <image id="image" width="1510" height="7" xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAAABCAYAAABg6BQ9AAAAuUlEQVQokZ3RwY7CMAwE0NhxShe1Te+I/4Fv3T/bCxQaWmrHRogbp5XnPk8jDZxO599xzOO28RKcQQSa5/JnpjwMw5FZVq8FAPp8rsosb2vPzOK1VGtt27YVqbVWETOv9LG6rhvfRinzFTFGr2Wm1vf9HhHxcrneU0rkX2YhpaYhilTK405EzX+bzLzkPBxEZF2WdQII6LW+gwggIkpE0cwUANFrEcU4TdMthBBzzj8i1f2kme5SarYX2CxnuBv2rZkAAAAASUVORK5CYII="/>
+  </defs>
+  <path id="Rounded_Rectangle_1" data-name="Rounded Rectangle 1" class="cls-1" d="M37,15H1560a25,25,0,0,1,25,25V161a25,25,0,0,1-25,25H37a25,25,0,0,1-25-25V40A25,25,0,0,1,37,15Z"/>
+  <path id="Rounded_Rectangle_1-2" data-name="Rounded Rectangle 1" class="cls-2" d="M37,15H1560a25,25,0,0,1,25,25V161a25,25,0,0,1-25,25H37a25,25,0,0,1-25-25V40A25,25,0,0,1,37,15Z"/>
+  <path id="Rounded_Rectangle_2" data-name="Rounded Rectangle 2" class="cls-1" d="M49.13,31.037h1500a25,25,0,0,1,25,25v91a25,25,0,0,1-25,25H49.13a25,25,0,0,1-25-25v-91A25,25,0,0,1,49.13,31.037Z"/>
+  <use id="Row_1" data-name="Row 1" x="42" y="32" xlink:href="#image"/>
+  <use id="Row_1-2" data-name="Row 1" x="42" y="39" xlink:href="#image"/>
+  <use id="Row_1-3" data-name="Row 1" x="42" y="46" xlink:href="#image"/>
+  <use id="Row_1-4" data-name="Row 1" x="42" y="53" xlink:href="#image"/>
+  <use id="Row_1-5" data-name="Row 1" x="42" y="60" xlink:href="#image"/>
+  <use id="Row_1-6" data-name="Row 1" x="42" y="67" xlink:href="#image"/>
+  <use id="Row_1-7" data-name="Row 1" x="42" y="74" xlink:href="#image"/>
+  <use id="Row_1-8" data-name="Row 1" x="42" y="81" xlink:href="#image"/>
+  <use id="Row_1-9" data-name="Row 1" x="42" y="88" xlink:href="#image"/>
+  <use id="Row_1-10" data-name="Row 1" x="42" y="95" xlink:href="#image"/>
+  <use id="Row_1-11" data-name="Row 1" x="42" y="102" xlink:href="#image"/>
+  <use id="Row_1-12" data-name="Row 1" x="42" y="109" xlink:href="#image"/>
+  <use id="Row_1-13" data-name="Row 1" x="42" y="116" xlink:href="#image"/>
+  <use id="Row_1-14" data-name="Row 1" x="42" y="123" xlink:href="#image"/>
+  <use id="Row_1-15" data-name="Row 1" x="42" y="130" xlink:href="#image"/>
+  <use id="Row_1-16" data-name="Row 1" x="42" y="137" xlink:href="#image"/>
+  <use id="Row_1-17" data-name="Row 1" x="42" y="144" xlink:href="#image"/>
+  <use id="Row_1-18" data-name="Row 1" x="42" y="151" xlink:href="#image"/>
+  <use id="Row_1-19" data-name="Row 1" x="42" y="158" xlink:href="#image"/>
+  <use id="Row_1-20" data-name="Row 1" x="42" y="165" xlink:href="#image"/>
+</svg>
